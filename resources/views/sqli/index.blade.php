@@ -1,24 +1,84 @@
 <!doctype html>
 <html lang="es">
+
 <head>
     <meta charset="utf-8">
     <title>SQLi Demo - Products</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: system-ui, Arial; margin: 24px; }
-        .row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
-        label { display:block; font-size: 14px; margin-bottom: 6px; }
-        input { padding: 10px; min-width: 320px; }
-        button { padding: 10px 14px; cursor: pointer; }
-        .hint { color: #555; font-size: 13px; margin-top: 8px; }
-        .box { margin-top: 18px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
-        .error { color: #b00020; }
-        table { border-collapse: collapse; width: 100%; margin-top: 14px; }
-        th, td { border: 1px solid #ddd; padding: 10px; font-size: 14px; }
-        th { background: #f7f7f7; text-align: left; }
-        .badge { display:inline-block; padding: 4px 8px; border-radius: 999px; font-size: 12px; background:#eee; }
+        body {
+            font-family: system-ui, Arial;
+            margin: 24px;
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        input {
+            padding: 10px;
+            min-width: 320px;
+        }
+
+        button {
+            padding: 10px 14px;
+            cursor: pointer;
+        }
+
+        .hint {
+            color: #555;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .box {
+            margin-top: 18px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .error {
+            color: #b00020;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 14px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f7f7f7;
+            text-align: left;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: #eee;
+        }
     </style>
 </head>
+
 <body>
     <h1>SQL Injection Demo (Products)</h1>
 
@@ -28,7 +88,8 @@
             <div class="row">
                 <div>
                     <label for="term">Buscar por nombre</label>
-                    <input id="term" name="term" value="{{ old('term', $term) }}" placeholder="Ej: manzana, uva, pera..." />
+                    <input id="term" name="term" value="{{ old('term', $term) }}"
+                        placeholder="Ej: manzana, uva, pera..." />
                     <div class="hint">Esto consulta la tabla <b>products_demo</b>.</div>
                 </div>
 
@@ -48,6 +109,15 @@
                 <span class="badge">Término: {{ $term }}</span>
             @endif
         </div>
+
+        @if($mode === 'vulnerable' && !empty($unsafeSql))
+            <div class="box" style="margin-top: 12px;">
+                <p class="error"><b>¿Por qué es inseguro?</b> Porque el input del usuario se concatena dentro del SQL.</p>
+                <p class="hint">SQL construido (NO ejecutar así en producción):</p>
+                <pre
+                    style="white-space: pre-wrap; background:#f7f7f7; padding:12px; border-radius:8px; border:1px solid #ddd;">{{ $unsafeSql }}</pre>
+            </div>
+        @endif
 
         @if($error)
             <p class="error" style="margin-top: 10px;">{{ $error }}</p>
@@ -83,4 +153,5 @@
         </table>
     @endif
 </body>
+
 </html>
